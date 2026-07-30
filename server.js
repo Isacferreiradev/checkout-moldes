@@ -445,19 +445,21 @@ app.post('/api/sigilo-webhook', (req, res) => {
 });
 
 // ─── Start Server ─────────────────────────────────────────────────────
-app.listen(PORT, () => {
-    console.log(`\n🚀 Servidor rodando em http://localhost:${PORT}`);
-    console.log(`\n── Brasil (PIX - EvoPay) ──────────────────`);
-    console.log(`📦 Checkout Completo:    http://localhost:${PORT}/index.html`);
-    console.log(`📦 Checkout Básico:      http://localhost:${PORT}/basico.html`);
-    console.log(`📦 Checkout Oferta:      http://localhost:${PORT}/oferta.html`);
-    console.log(`\n── México (Cartão - Sigilo Pay) ───────────`);
-    console.log(`📦 Checkout México:      http://localhost:${PORT}/checkout-mx.html`);
-    console.log(`📦 Gracias (Thank You):  http://localhost:${PORT}/gracias.html`);
-    console.log(`🔑 EvoPay API Key:    ${EVOPAY_API_KEY ? '✅' : '❌ FALTANDO!'}`);
-    console.log(`🔑 Sigilo Public Key: ${SIGILO_PUBLIC_KEY ? '✅' : '❌ FALTANDO!'}`);
-    console.log(`🔑 Sigilo Secret Key: ${SIGILO_SECRET_KEY ? '✅' : '❌ FALTANDO!'}`);
-    console.log(`🔑 UTMify Token:     ${UTMIFY_API_TOKEN ? '✅' : '❌ FALTANDO!'}\n`);
-});
+if (process.env.NODE_ENV !== 'production' && !process.env.VERCEL) {
+    app.listen(PORT, () => {
+        console.log(`\n🚀 Servidor rodando em http://localhost:${PORT}`);
+        console.log(`\n── Brasil (PIX - EvoPay) ──────────────────`);
+        console.log(`📦 Checkout Completo:    http://localhost:${PORT}/index.html`);
+        console.log(`📦 Checkout Básico:      http://localhost:${PORT}/basico.html`);
+        console.log(`📦 Checkout Oferta:      http://localhost:${PORT}/oferta.html`);
+        console.log(`\n── México (Cartão - Sigilo Pay) ───────────`);
+        console.log(`📦 Checkout México:      http://localhost:${PORT}/checkout-mx.html`);
+        console.log(`📦 Gracias (Thank You):  http://localhost:${PORT}/gracias.html`);
+        console.log(`🔑 EvoPay API Key:    ${EVOPAY_API_KEY ? '✅' : '❌ FALTANDO!'}`);
+        console.log(`🔑 Sigilo Public Key: ${SIGILO_PUBLIC_KEY ? '✅' : '❌ FALTANDO!'}`);
+        console.log(`🔑 Sigilo Secret Key: ${SIGILO_SECRET_KEY ? '✅' : '❌ FALTANDO!'}`);
+        console.log(`🔑 UTMify Token:     ${UTMIFY_API_TOKEN ? '✅' : '❌ FALTANDO!'}\n`);
+    });
+}
 
 module.exports = app;
