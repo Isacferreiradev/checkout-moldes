@@ -27,6 +27,27 @@ app.use(cors());
 app.use(express.json());
 app.use(express.static(path.join(__dirname)));
 
+// ─── Roteamento de Páginas HTML ───────────────────────────────────────
+app.get('/', (req, res) => {
+    res.sendFile(path.join(__dirname, 'index.html'));
+});
+
+app.get('/basico', (req, res) => {
+    res.sendFile(path.join(__dirname, 'basico.html'));
+});
+
+app.get('/oferta', (req, res) => {
+    res.sendFile(path.join(__dirname, 'oferta.html'));
+});
+
+app.get('/checkout-mx', (req, res) => {
+    res.sendFile(path.join(__dirname, 'checkout-mx.html'));
+});
+
+app.get('/gracias', (req, res) => {
+    res.sendFile(path.join(__dirname, 'gracias.html'));
+});
+
 // ═══════════════════════════════════════════════════════════════════════
 // ─── EvoPay Endpoints (PIX - Brasil) ──────────────────────────────────
 // ═══════════════════════════════════════════════════════════════════════
@@ -195,15 +216,17 @@ async function notifyUtmify(transactionId, status = 'paid', extraData = {}) {
             customer: {
                 name: stored.customerName,
                 email: stored.customerEmail,
-                phone: '',
-                document: '',
+                phone: null,
+                document: null,
                 country: 'BR',
-                ip: stored.customerIp
+                ip: stored.customerIp || null
             },
             products: [
                 {
                     id: transactionId,
                     name: stored.productName,
+                    planId: transactionId,
+                    planName: stored.productName,
                     quantity: 1,
                     priceInCents: priceInCents
                 }
@@ -214,14 +237,15 @@ async function notifyUtmify(transactionId, status = 'paid', extraData = {}) {
                 userCommissionInCents: priceInCents
             },
             isTest: false,
-            // UTMs capturados na criação
-            src: stored.utms.src || '',
-            sck: stored.utms.sck || '',
-            utm_source: stored.utms.utm_source || '',
-            utm_campaign: stored.utms.utm_campaign || '',
-            utm_medium: stored.utms.utm_medium || '',
-            utm_content: stored.utms.utm_content || '',
-            utm_term: stored.utms.utm_term || ''
+            trackingParameters: {
+                src: stored.utms.src || null,
+                sck: stored.utms.sck || null,
+                utm_source: stored.utms.utm_source || null,
+                utm_campaign: stored.utms.utm_campaign || null,
+                utm_medium: stored.utms.utm_medium || null,
+                utm_content: stored.utms.utm_content || null,
+                utm_term: stored.utms.utm_term || null
+            }
         };
 
         console.log(`📊 Enviando para UTMify (${status}):`, JSON.stringify(utmifyPayload, null, 2));
